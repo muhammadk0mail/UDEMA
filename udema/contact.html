@@ -90,7 +90,7 @@
                             <li><a href="courses-grid-sidebar.html">Courses grid sidebar</a></li>
                             <li><a href="courses-list.html">Courses list</a></li>
                             <li><a href="courses-list-sidebar.html">Courses list sidebar</a></li>
-                            <li><a href="course-detail.php">Course detail</a></li>
+                            <li><a href="course-detail.html">Course detail</a></li>
                             <li><a href="course-detail-2.html">Course detail working form</a></li>
                             <li><a href="admission.html">Admission wizard</a></li>
                             <li><a href="teacher-detail.html">Teacher detail</a></li>
@@ -127,7 +127,7 @@
                         </ul>
                     </li>
                     <li><span><a href="https://1.envato.market/Gk0PV" target="_parent">Buy template</a></span></li>
-                    <li><span><a href="contact.php" target="_parent">Contact</a></span></li>
+                    <li><span><a href="contact.html" target="_parent">Contact</a></span></li>
                 </ul>
             </nav>
             <!-- Search Menu -->
@@ -192,80 +192,7 @@
                         }
                     </style>
 
-<!-- ************************************************************************************* -->
 
-<?php 
-
-include 'config.php';
-
-error_reporting(0);
-
-session_start();
-
-if (isset($_SESSION['fname'])) {
-    header("Location: index.html");
-}
-
-if (isset($_POST['submit'])) {
-	$fname = $_POST['fname'];
-	$email = $_POST['email'];
-	$pnum = $_POST['pnum'];
-	$desc = $_POST['desc'];
-
-
-
-    if(isset($_POST['g-recaptcha-response']))
-    {
-        $recaptcha = $_POST['g-recaptcha-response'];
-
-        if(!$recaptcha){
-            echo "<script>alert('Please go back and check recaptcha')</script>"; 
-            header("Location: contact.php");
-        }
-        else{
-        $secretkey = "6LdMGfoZAAAAAE4CPeu9mJ5rmosUgsi3DFftAXk0";
-        $url = "https://www.google.com/recaptcha/api/siteverify?
-        secret= '.$secretkey.' &response='.$recaptcha.'&remoteip= $UserIP";
-        $response = file_get_contents ($url);
-        $responsekey = json_decode($response,true);
-
-        // if($responsekey['success']){
-            
-		$sql = "SELECT * FROM message WHERE fname ='$fname'";
-		
-        $result = mysqli_query($conn, $sql);
-		
-			$sql = "INSERT INTO `message` (`fname`, `email`, `pnum`, `desc`)
-             VALUES ('$fname', '$email', '$pnum', '$desc');";
-			
-            $result = mysqli_query($conn, $sql);
-            
-        
-			if($result)
-            {
-				echo "<script>alert('Thank you for your feedback')</script>";
-				$fname = "";
-				$email = "";
-				$pnum = "";
-				$desc = "";
-
-            }
-        }
-    
-}
-else{
-    echo "<script>alert('Invalid Captcha, please try again')</script>";
-    header("Location: contact.php");
-}
-
-		
-	} 
-
-
-?>
-
-
-<!-- ************************************************************************************** -->
            <div class="col-md-6">
                         <div class="info" style="
                         outline: none;
@@ -277,26 +204,38 @@ else{
                         border: none;
                         margin-right: 50px;">
                             <h2 class="black mb-4">Send a message</h2>
-                        <form action="" method="POST">
+                            <form method="post" onsubmit="return submitUserForm();">
+
                             <input class="fname" type="text" name="fname" placeholder="Full name" required>
                             <input type="text" name="email" placeholder="Email" required>
                             <input type="text" name="pnum" placeholder="Phone number" required>
                             <textarea name="desc" id="desc" cols="30" rows="5" placeholder="Your message" required></textarea>
-                            <style>
-                            /* .recap{
-                                margin-top:15px;
-                                margin-bottom:20px;
-                                
-                            } */
-                            </style>
-                            <div id="html_element" class="g-recaptcha"></div>
-                            <div style="margin-top:70px;">
-                            <button name="submit" class="btn btn-primary">Submit</button>
-                            <a class="btn btn-primary" href="https://www.google.com/maps/place/Spark+Databox/@11.0505379,76.955648,13z/data=!4m5!3m4!1s0x0:0xe1afc0945f8f419b!8m2!3d11.0505399!4d76.9906676?hl=en"target="_blank">Get Direction</a>
+
+                                    <div class="g-recaptcha mb-5" data-sitekey="6LcGAr0bAAAAAGsNivcWoXwUdU2AGrtvMQ8AFNK1" data-callback="verifyCaptcha"></div>
+                                    <div id="g-recaptcha-error"></div>
+                                    <input type="submit" name="submit" class="btn btn-primary" value="Submit" />
+                                    <a class="btn btn-primary" href="https://www.google.com/maps/place/Spark+Databox/@11.0505379,76.955648,13z/data=!4m5!3m4!1s0x0:0xe1afc0945f8f419b!8m2!3d11.0505399!4d76.9906676?hl=en"target="_blank">Get Direction</a>
                                                 <a href="tel:+612380933400" class="btn btn-primary">Call US</a>
                             <a href="mailto:komailkhan235@gmail.com" class="btn btn-primary"> Email Us</a>
                             </div>
                         </form>
+
+                        <script src='https://www.google.com/recaptcha/api.js'></script>
+                        <script>
+                    function submitUserForm() {
+                        var response = grecaptcha.getResponse();
+                        if(response.length == 0) {
+                            document.getElementById('g-recaptcha-error').innerHTML = '<span style="color:red;">This field is required.</span>';
+                            return false;
+                        }
+                        return true;
+                    }
+                     
+                    function verifyCaptcha() {
+                        document.getElementById('g-recaptcha-error').innerHTML = '';
+                    }
+                    </script>
+
                         </div>
                     </div>
                 </div>

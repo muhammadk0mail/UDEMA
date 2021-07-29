@@ -27,16 +27,7 @@
 
     <!-- YOUR CUSTOM CSS -->
     <link href="css/custom.css" rel="stylesheet">
-
-
-	<script type="text/javascript">
-      var onloadCallback = function() {
-        grecaptcha.render('html_element', {
-          'sitekey' : '6LdMGfoZAAAAAE4CPeu9mJ5rmosUgsi3DFftAXk0'
-        });
-      };
-    </script>
-
+		<!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
 </head>
 
 <body>
@@ -115,6 +106,8 @@
 					</ul>
 				</li>
 				<li><span><a href="https://1.envato.market/Gk0PV" target="_parent">Buy template</a></span></li>
+				<li><span><a href="contact.html" target="_parent">Contact</a></span></li>
+
 			</ul>
 		</nav>
 		<!-- Search Menu -->
@@ -460,7 +453,7 @@
 	</main>
 	<!--/main-->
 
-							<!-- *********************************************************************** -->
+							<!-- ***************************POPUP************************************ -->
 							<!DOCTYPE html>
 							<html>
 							<head>
@@ -548,72 +541,9 @@
 							</style>
 							</head>
 							<body>
-	<!-- **********************************************************************						 -->
-	<?php 
 
-	include 'config.php';
-	
-	error_reporting(0);
-	
-	session_start();
-	
-	if (isset($_SESSION['fname'])) {
-		header("Location: index.html");
-	}
-	
-	if (isset($_POST['submit'])) {
-		$fname = $_POST['fname'];
-		$email = $_POST['email'];
-		$pnum = $_POST['pnum'];
-
-
-		if(isset($_POST['g-recaptcha-response']))
-		{
-			$recaptcha = $_POST['g-recaptcha-response'];
-	
-			if(!$recaptcha){
-				echo "<script>alert('Please go back and check recaptcha')</script>"; 
-				header("Location: course-detail.php");
-			}
-			else{
-			$secretkey = "6LdMGfoZAAAAAE4CPeu9mJ5rmosUgsi3DFftAXk0";
-			$url = "https://www.google.com/recaptcha/api/siteverify?
-			secret= '.$secretkey.' &response='.$recaptcha.'&remoteip= $UserIP";
-			$response = file_get_contents ($url);
-			$responsekey = json_decode($response,true);
-	
-	
-			$sql = "SELECT * FROM registration WHERE fname ='$fname'";
-			
-			$result = mysqli_query($conn, $sql);
-			
-				$sql = "INSERT INTO `registration` (`fname`, `email`, `pnum`)
-				 VALUES ('$fname', '$email', '$pnum');";
-				
-				$result = mysqli_query($conn, $sql);
-				if ($result) {
-					echo "<script>alert('Wow! User Registration Completed.')</script>";
-					$fname = "";
-					$email = "";
-					$pnum = "";
-				
-			}
-			
-		} 
-	}
-	else{
-		echo "<script>alert('Invalid Captcha, please try again')</script>";
-		header("Location: course-detail.php");
-	}
-	
-			
-		} 	
-	
-	?>
-
-	<!-- ********************************************************************************** -->
 							<div class="form-popup" id="myForm">
-							  <form  class="form-container" action="" method="POST">
+								<form method="post" onsubmit="return submitUserForm();"  class="form-container">
 								  
 								  <button type="button" class="btn cancel" onclick="closeForm()">x</button>
 								  
@@ -621,13 +551,32 @@
 								<input class="fname" type="text" name="fname" placeholder="Full name" required>
 								<input type="text" name="email" placeholder="Email" required>
 								<input type="text" name="pnum" placeholder="Phone number" required>
-								<div id="html_element" style=""></div>
+		
+								<div class="g-recaptcha" data-sitekey="6LcGAr0bAAAAAGsNivcWoXwUdU2AGrtvMQ8AFNK1" data-callback="verifyCaptcha"></div>
+						        <div id="g-recaptcha-error"></div>
 
-
-								<button type="submit" class="btn" name="submit" >Submit</button>
-
+								<!-- <button type="submit" class="btn" name="submit" >Submit</button> -->
+								<input type="submit" class="btn" name="submit" value="Submit" />
 
 							  </form>
+
+							  <script src='https://www.google.com/recaptcha/api.js'></script>
+							  <script>
+						  function submitUserForm() {
+							  var response = grecaptcha.getResponse();
+							  if(response.length == 0) {
+								  document.getElementById('g-recaptcha-error').innerHTML = '<span style="color:red;">This field is required.</span>';
+								  return false;
+							  }
+							  return true;
+						  }
+						   
+						  function verifyCaptcha() {
+							  document.getElementById('g-recaptcha-error').innerHTML = '';
+							  header('course-detail.html')
+
+						  }
+						  </script>
 							</div>
 							
 							<script>
@@ -656,23 +605,23 @@
 					<div class="follow_us">
 						<ul>
 							<li>Follow us</li>
-							<li><a href="course-detail.php#0"><i class="ti-facebook"></i></a></li>
-							<li><a href="course-detail.php#0"><i class="ti-twitter-alt"></i></a></li>
-							<li><a href="course-detail.php#0"><i class="ti-google"></i></a></li>
-							<li><a href="course-detail.php#0"><i class="ti-pinterest"></i></a></li>
-							<li><a href="course-detail.php#0"><i class="ti-instagram"></i></a></li>
+							<li><a href="course-detail.html#0"><i class="ti-facebook"></i></a></li>
+							<li><a href="course-detail.html#0"><i class="ti-twitter-alt"></i></a></li>
+							<li><a href="course-detail.html#0"><i class="ti-google"></i></a></li>
+							<li><a href="course-detail.html#0"><i class="ti-pinterest"></i></a></li>
+							<li><a href="course-detail.html#0"><i class="ti-instagram"></i></a></li>
 						</ul>
 					</div>
 				</div>
 				<div class="col-lg-3 col-md-6 ml-lg-auto">
 					<h5>Useful links</h5>
 					<ul class="links">
-						<li><a href="course-detail.php#0">Admission</a></li>
-						<li><a href="course-detail.php#0">About</a></li>
-						<li><a href="course-detail.php#0">Login</a></li>
-						<li><a href="course-detail.php#0">Register</a></li>
-						<li><a href="course-detail.php#0">News &amp; Events</a></li>
-						<li><a href="course-detail.php#0">Contacts</a></li>
+						<li><a href="course-detail.html#0">Admission</a></li>
+						<li><a href="course-detail.html#0">About</a></li>
+						<li><a href="course-detail.html#0">Login</a></li>
+						<li><a href="course-detail.html#0">Register</a></li>
+						<li><a href="course-detail.html#0">News &amp; Events</a></li>
+						<li><a href="course-detail.html#0">Contacts</a></li>
 					</ul>
 				</div>
 				<div class="col-lg-3 col-md-6">
@@ -698,8 +647,8 @@
 			<div class="row">
 				<div class="col-md-8">
 					<ul id="additional_links">
-						<li><a href="course-detail.php#0">Terms and conditions</a></li>
-						<li><a href="course-detail.php#0">Privacy</a></li>
+						<li><a href="course-detail.html#0">Terms and conditions</a></li>
+						<li><a href="course-detail.html#0">Privacy</a></li>
 					</ul>
 				</div>
 				<div class="col-md-4">
@@ -717,9 +666,9 @@
     <script src="js/common_scripts.js"></script>
     <script src="js/main.js"></script>
 	<script src="assets/validate.js"></script>
-	<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
-        async defer>
-    </script>
+	 <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+     async defer>
+    </script> 
   
 </body>
 </html>
